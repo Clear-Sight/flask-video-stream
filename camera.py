@@ -3,6 +3,10 @@ import threading
 import time
 import logging
 
+import zmq
+import base64
+import numpy as np
+
 logger = logging.getLogger(__name__)
 
 thread = None
@@ -12,7 +16,7 @@ class Camera:
 		logger.info(f"Initializing camera class with {fps} fps and video_source={video_source}")
 		self.fps = fps
 		self.video_source = video_source
-		self.camera = cv2.VideoCapture(self.video_source)
+		self.camera = None
 		# We want a max of 5s history to be stored, thats 5s*fps
 		self.max_frames = 5*self.fps
 		self.frames = []
@@ -22,7 +26,7 @@ class Camera:
 		global thread
 		if thread is None:
 			logging.debug("Creating thread")
-			thread = threading.Thread(target=self._capture_loop,daemon=True)
+			thread = threading.Thread(target=self._capture_incoming_feed,daemon=True)
 			logger.debug("Starting thread")
 			self.isrunning = True
 			thread.start()
@@ -43,6 +47,7 @@ class Camera:
 	def stop(self):
 		logger.debug("Stopping thread")
 		self.isrunning = False
+
 	def get_frame(self, _bytes=True):
 		if len(self.frames)>0:
 			if _bytes:
@@ -53,4 +58,20 @@ class Camera:
 			with open("images/not_found.jpeg","rb") as f:
 				img = f.read()
 		return img
-		
+
+	def _capture_incoming_feed(self):
+		logger.debug("Icoming capture started")
+		context = zmq.Context()
+		socket = context.socket(zmq.SUB)
+		socket.bind('tcp://*:7777')
+		socket.setsockopt_string(zmq.SUBSCRIBE, np.unicode(''))
+		dt = 1/self.fps
+		while self.isrunning:
+		     image_string = socket.recv_string()
+		     raw_image = base64.b64decode(image_string)
+		     image = np.frombuffer(raw_image, dtype=np.uint8)
+		     if len(self.frames)==self.max_frames:
+			     self.frames = self.frames[1:]
+		     self.frames.append(cv2.imdecode(image, 1))
+		     time.sleep(dt)
+		logger.info("Thread stopped incoming feed successfully")
