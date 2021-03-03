@@ -1,9 +1,17 @@
-<html>
-    <head>
-        <title>Stream</title>
-    </head>
-    <body>
-        <h1>Video Stream</h1>
-        <img src="{{ url_for('video_feed') }}">
-    </body>
-</html>
+{% extends "layout.html" %}
+{% block content %}
+
+        <!-- Page Content -->
+        <div class="card w-50">
+          <div class="card-header">
+            Drone stream
+          </div>
+          <div class="card-body">
+            <img src="{{ url_for('video_feed') }}">
+            <br>
+            <br>
+            <a href="/"><button class="btn btn-warning">Home</button></a>
+          </div>
+        </div>
+
+{% endblock %}

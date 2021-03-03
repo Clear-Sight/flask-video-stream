@@ -1,6 +1,10 @@
 # Flask-opencv webcam streaming server #
 This is a simple python3 script that serves a tiny Flask video webserver that allows to take photos or see real time video streaming of a connected camera/webcam controlled with opencv.
 
+## html template
+
+[SB Admin](https://startbootstrap.com/template/sb-admin)
+
 ## Requirements ##
 In order to execute the script you need to install opencv3 -> `import cv2` and some python modules.
 
@@ -36,4 +40,3 @@ The project is default configured to run at port 5000. To change the running por
 
 ### Change camera source ###
 To change the camera source of opencv you can go to the beginning of file `server.py` and add a `video_source=1` it can be 0,1,2... as many video inputs the device has in the declaration of object `Camera`. Or you can change the default video source on `camera.py` `Camera` class `__init__` method.
-

@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+{% block content %}
+
+        <!-- Page Content -->
+        <div class="card w-50">
+          <div class="card-header">
+            Upload file
+          </div>
+          <div class="card-body">
+            <form method = "POST"
+              enctype = "multipart/form-data">
+              <input type = "file" name = "file" />
+              <br>
+              <br>
+              {{ form.key(class="form-control") }}
+              <br>
+              <input class="btn btn-primary" type="submit"/>
+            </form>
+          </div>
+        </div>
+
+{% endblock %}

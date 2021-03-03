@@ -1,0 +1,41 @@
+{% extends "layout.html" %}
+{% block content %}
+
+        <div class="">
+          <a class="btn btn-success" href="newfile" role="button">New file <i class="fa fa-upload" aria-hidden="true"></i></a>
+        </div>
+        <br>
+
+        <!-- DataTables Example -->
+        <div class="card mb-3">
+          <div class="card-header">
+            <i class="fas fa-table"></i>
+            Data Table Example</div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                  <tr>
+                    <th>filename</th>
+                    <th>operation</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for value in files %}
+                    <tr>
+                      <td>{{ value }} <i class="fa fa-lock" aria-hidden="true"></i></td>
+                      <td>
+                        <div class="btn-group btn-group-sm">
+                          <a class="btn btn-danger" href="files/{{ value }}/delete" role="button"><i class="fa fa-trash" aria-hidden="true"></i></a>
+                          <a class="btn btn-primary" href="files/{{ value }}/download" role="button"><i class="fa fa-download" aria-hidden="true"></i></a>
+                        </div>
+                      </td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+{% endblock %}
