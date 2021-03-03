@@ -12,13 +12,12 @@ logger = logging.getLogger(__name__)
 thread = None
 
 class Camera:
-	def __init__(self,fps=20,video_source=0):
+	def __init__(self,fps=1024,video_source=0):
 		logger.info(f"Initializing camera class with {fps} fps and video_source={video_source}")
 		self.fps = fps
 		self.video_source = video_source
 		self.camera = None
-		# We want a max of 5s history to be stored, thats 5s*fps
-		self.max_frames = 5*self.fps
+		self.max_frames = 3 #1*self.fps
 		self.frames = []
 		self.isrunning = False
 	def run(self):
@@ -41,7 +40,7 @@ class Camera:
 				if len(self.frames)==self.max_frames:
 					self.frames = self.frames[1:]
 				self.frames.append(im)
-			time.sleep(dt)
+			#time.sleep(dt)
 		logger.info("Thread stopped successfully")
 
 	def stop(self):
@@ -51,7 +50,8 @@ class Camera:
 	def get_frame(self, _bytes=True):
 		if len(self.frames)>0:
 			if _bytes:
-				img = cv2.imencode('.png',self.frames[-1])[1].tobytes()
+				#logger.debug("Second encode")
+				img = cv2.imencode('.jpeg',self.frames[-1])[1].tobytes()
 			else:
 				img = self.frames[-1]
 		else:
